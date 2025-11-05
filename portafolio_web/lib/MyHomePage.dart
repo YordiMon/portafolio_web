@@ -104,10 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         icon: Icons.article_rounded,
                         borderColor: Colors.blueGrey,
                         onTap: () {
-                          launchUrl(
-                            Uri.parse('lib/assets/CV_Yordi_Monreal.pdf'),
-                            webOnlyWindowName: '_blank',
-                          );
+                          launchURL('https://drive.google.com/file/d/1erKo0ww7Ads8zgq4t_8GlUWpBzQfNKXS/view?usp=sharing');
                         },
                       ),
                     ],
