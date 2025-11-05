@@ -13,6 +13,7 @@ import 'package:portafolio_web/widgets/RichNormalText.dart';
 import 'package:portafolio_web/widgets/SDText.dart';
 import 'package:portafolio_web/widgets/TechWidget.dart';
 import 'package:portafolio_web/helpers/url_helper.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -22,17 +23,56 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final ScrollController _scrollController = ScrollController();
+  
+  double _inicioPosition = 0;
+  double _sobreMiPosition = 0;
+  double _proyectosPosition = 0;
+  double _tecnologiasPosition = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _calcularPosiciones();
+    });
+  }
+
+  void _calcularPosiciones() {
+    final screenHeight = MediaQuery.of(context).size.height;
+    
+    setState(() {
+      _inicioPosition = 0;
+      _sobreMiPosition = screenHeight * 0.8; 
+      _proyectosPosition = screenHeight * 1.85; 
+      _tecnologiasPosition = screenHeight * 3.65; 
+    });
+  }
+
+  void _scrollToPosition(double position) {
+    _scrollController.animateTo(
+      position,
+      duration: const Duration(milliseconds: 800),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     final double screenWidth = MediaQuery.of(context).size.width;
     
     final double horizontalPadding = screenWidth > 1200 
         ? (screenWidth - 450) / 2  
         : 20; 
     
-        final double effectiveWidth = screenWidth > 450 ? 450 : screenWidth;
+    final double effectiveWidth = screenWidth > 450 ? 450 : screenWidth;
 
     return Scaffold(
       body: Container(
@@ -42,13 +82,14 @@ class _MyHomePageState extends State<MyHomePage> {
             end: Alignment.centerRight,
             colors: [
               Color.fromARGB(255, 16, 22, 27),
-                            Color.fromARGB(255, 16, 22, 27),
+              Color.fromARGB(255, 16, 22, 27),
             ],
           ),
         ),
         child: Stack(
           children: [
             ListView(
+              controller: _scrollController,
               cacheExtent: 1,
               physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: horizontalPadding), 
@@ -62,7 +103,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         text: 'Visualizar CV',
                         icon: Icons.article_rounded,
                         borderColor: Colors.blueGrey,
-                        onTap: () {},
+                        onTap: () {
+                          launchUrl(
+                            Uri.parse('lib/assets/CV_Yordi_Monreal.pdf'),
+                            webOnlyWindowName: '_blank',
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -132,22 +178,20 @@ class _MyHomePageState extends State<MyHomePage> {
                             borderColor: Colors.blueGrey,
                             textColor: Colors.white70,
                           ),
-                          
-                          
                         ],
                       ),
                       const SizedBox(height: 50),
                       ShakeY(
-                            infinite: true,
-                            from: 5,
-                            duration: const Duration(seconds: 2),
-                            curve: Curves.linear,
-                            child: const Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              color: Colors.blueGrey,
-                              size: 20,
-                            ),
-                          ),
+                        infinite: true,
+                        from: 5,
+                        duration: const Duration(seconds: 2),
+                        curve: Curves.linear,
+                        child: const Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: Colors.blueGrey,
+                          size: 20,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -155,24 +199,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(height: 150),
                 
                 FadeInUp(
-                  child: Column(children: [
-                    AboutSection(),
+                  child: Column(
+                    children: [
+                      AboutSection(),
                       const SizedBox(height: 125),
                       ShakeY(
-                            infinite: true,
-                            from: 5,
-                            duration: const Duration(seconds: 2),
-                            curve: Curves.linear,
-                            child: const Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              color: Colors.blueGrey,
-                              size: 20,
-                            ),
-                          ),
-
-                          
-
-                  ],),
+                        infinite: true,
+                        from: 5,
+                        duration: const Duration(seconds: 2),
+                        curve: Curves.linear,
+                        child: const Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: Colors.blueGrey,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 
                 const SizedBox(height: 125),
@@ -180,24 +223,26 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: ProjectsWidget(),
                 ),
                 const SizedBox(height: 50),
-                FadeInUp(child: Column(
-                  children: [
-                    InDevelopProject(),
-                    const SizedBox(height: 75),
+                FadeInUp(
+                  child: Column(
+                    children: [
+                      InDevelopProject(),
+                      const SizedBox(height: 75),
                       ShakeY(
-                            infinite: true,
-                            from: 5,
-                            duration: const Duration(seconds: 2),
-                            curve: Curves.linear,
-                            child: const Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              color: Colors.blueGrey,
-                              size: 20,
-                            ),
-                          ),
-                  ],
-                )),
-                 const SizedBox(height: 125),
+                        infinite: true,
+                        from: 5,
+                        duration: const Duration(seconds: 2),
+                        curve: Curves.linear,
+                        child: const Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: Colors.blueGrey,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 125),
                 FadeInUp(
                   child: Column(
                     children: [
@@ -311,7 +356,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                   iconColors: [
                     Colors.red,
-                    const Color.fromARGB(255, 96, 33, 243),
+                    Color.fromARGB(255, 96, 33, 243),
                     Colors.yellow,
                     Colors.blueGrey,
                   ],
@@ -330,7 +375,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       NormalText(text: 'Portafolio desarrollado y diseñado por Yordi Monreal', fontSize: 10, color: Colors.blueGrey,),
                       const SizedBox(height: 5),
                       InkWell(
-                        onTap: null,
+                        onTap: () => launchURL('https://github.com/YordiMon/portafolio_web'),
                         child: Text(
                           'Ver código del portafolio',
                           textAlign: TextAlign.center,
@@ -363,7 +408,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       horizontal: horizontalPadding, 
                       vertical: 10,
                     ),
-                    child: const CustomAppBar(),
+                    child: CustomAppBar(
+                      onInicioTap: () => _scrollToPosition(_inicioPosition),
+                      onSobreMiTap: () => _scrollToPosition(_sobreMiPosition),
+                      onProyectosTap: () => _scrollToPosition(_proyectosPosition),
+                      onTecnologiasTap: () => _scrollToPosition(_tecnologiasPosition),
+                    ),
                   ),
                 ),
               ),
@@ -374,9 +424,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-/* 
-
-C#, , PHP, MySQL,Kotlin
-
-*/

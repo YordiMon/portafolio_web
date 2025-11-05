@@ -67,6 +67,7 @@ flutter:
     - lib/assets/hb.png
     - lib/assets/pf.png
     - lib/assets/bp.png
+    - lib/assets/CV_Yordi_Monreal.pdf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
